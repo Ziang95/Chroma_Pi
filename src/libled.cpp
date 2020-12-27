@@ -26,6 +26,13 @@ void RGB_12bit::set(int r, int g, int b)
     this->B = b;
 }
 
+void RGB_12bit::random()
+{
+    for (int i = 0; i < 3; i++)
+        (*this)[i] = rand() % 0xFFF;
+    (*this) = (*this) * 0xFFF / (R + G + B);
+}
+
 RGB_12bit RGB_12bit::operator+ (RGB_12bit const &obj)
 {
     RGB_12bit ret(R + obj.R, G + obj.G, B + obj.B);
@@ -38,7 +45,7 @@ RGB_12bit RGB_12bit::operator- (RGB_12bit const &obj)
     return ret;
 }
 
-int16_t& RGB_12bit::operator[] (uint8_t i)
+int& RGB_12bit::operator[] (uint8_t i)
 {
     switch (i)
     {
@@ -51,15 +58,27 @@ int16_t& RGB_12bit::operator[] (uint8_t i)
     }
 }
 
-RGB_12bit RGB_12bit::operator/ (int factor)
+RGB_12bit RGB_12bit::operator* (int mltpler)
 {
-    RGB_12bit ret(R / factor, G / factor, B / factor);
+    RGB_12bit ret(R * mltpler, G * mltpler, B * mltpler);
+    return ret;
+}
+
+RGB_12bit RGB_12bit::operator/ (int divisor)
+{
+    RGB_12bit ret(R / divisor, G / divisor, B / divisor);
     return ret;
 }
 
 bool RGB_12bit::operator== (RGB_12bit const &obj)
 {
     return (R == obj.R) && (G == obj.G) && (B == obj.B);
+}
+
+ostream& operator<< (ostream &os, RGB_12bit const& obj)
+{
+    cout << "R=" << obj.R << "\tG=" << obj.G << "\tB=" << obj.B;
+    return os;
 }
 
 chromled::chromled(PCA9685 *chip, int R_c, int G_c, int B_c, bool eType)
@@ -121,7 +140,6 @@ void chromled::linear_gradient(int steps, RGB_12bit target)
             else
                 color_tmp[i] += stride[i];
         }
-        // cout << color_tmp.R << ',' << color_tmp.G << ',' << color_tmp.B << endl;
         set_color(color_tmp);
     }
 }

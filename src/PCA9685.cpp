@@ -18,10 +18,10 @@ void PCA9685::init() {
     filename += std::to_string(this->bus);
     this->i2cHandle = open(filename.c_str(), O_RDWR);
     if (this->i2cHandle < 0) {
-        throw std::runtime_error("AAAAAAAHHHH the i2c bus couldn't open PANIC PANIC PANIC!!");
+        throw std::runtime_error("The i2c bus couldn't open, PANIC alert");
     }
     if (ioctl(this->i2cHandle, I2C_SLAVE, this->address) < 0) {
-        throw std::runtime_error("OH GOD! the darn thing isn't plugged in you silly head");
+        throw std::runtime_error("Better check if PCA9685 board is connected");
     }
 
     this->setRegister(0x00, 0b00010000);
@@ -63,7 +63,7 @@ void PCA9685::setFreq(int freq){
 
 void PCA9685::setPWM(int channel, int on, int off) {
     if (channel > 15) {
-        throw std::domain_error("Channel is too large");
+        throw std::domain_error("Channel ID out of range");
     }
     auto lowON = (uint8_t) (on & 0xFF);
     auto highON = (uint8_t) ((on >> 8) & 0xFF);
