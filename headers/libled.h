@@ -43,8 +43,8 @@ public:
 
     RGB_12bit get_color();
 private:
-    RGB_12bit color;
-    PCA9685 *const chip;
+    RGB_12bit color = RGB_12bit(0, 0, 0);
+    PCA9685 *const chip = nullptr;
     bool eType;
     int R_channel;
     int G_channel;

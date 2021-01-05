@@ -16,10 +16,21 @@ int main(int argc, char** argv)
     chromled led0(&hat, 0, 1, 2, COMMON_ANODE);
     chromled led1(&hat, 3, 4, 5, COMMON_ANODE);
     vector<chromled*> leds{&led0, &led1};
-    
-    extinct(leds);
+
+    //---------OOP Programming----------
+    chroma_layer layer(leds);
+    layer.load(extinct);
     sleep(1);
-    blink_on(leds, 40, 100);
+    layer.load(blink_on, 40, 100);
     sleep(1);
-    blink_off(leds, 100, 80);
+    layer.load(blink_off, 100, 80);
+    //----------------------------------
+
+    //------Functional Programming------
+    // extinct(leds);
+    // sleep(1);
+    // blink_on(leds, 40, 100);
+    // sleep(1);
+    // blink_off(leds, 100, 80);
+    //----------------------------------
 }

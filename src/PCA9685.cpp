@@ -1,12 +1,15 @@
 #include "../headers/PCA9685.h"
 
 #include <cstdlib>
+#include <mutex>
+#include <stdexcept>
+
 #include <unistd.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-#include <stdexcept>
 
+static std::mutex io_mtx;
 
 PCA9685::PCA9685(int address, uint8_t bus) {
     this->address = address;
@@ -27,6 +30,7 @@ void PCA9685::init() {
     this->setRegister(0x00, 0b00010000);
     this->setRegister(0xFE, PRESCALE);
     this->setRegister(0x00, 0);
+    this->setFreq(1525);
 }
 
 void PCA9685::setRegister(uint8_t reg, uint8_t val) {
@@ -34,22 +38,22 @@ void PCA9685::setRegister(uint8_t reg, uint8_t val) {
             reg,
             val
     };
+    io_mtx.lock();
     if (write(this->i2cHandle, packet, 2) != 2) {
         throw std::runtime_error("fail write");
     }
+    io_mtx.unlock();
 }
 
 int PCA9685::getRegister(uint8_t reg) {
     uint8_t buf[1] = {
             reg
     };
-
-    if (write(this->i2cHandle, buf, 1) != 1) {
-        throw std::runtime_error("fail read 1");
-    }
+    io_mtx.lock();
     if (read(this->i2cHandle, buf, 1) != 1) {
-        throw std::runtime_error("fail read 2");
+        throw std::runtime_error("fail read");
     }
+    io_mtx.unlock();
     return buf[0];
 }
 

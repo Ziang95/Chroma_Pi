@@ -20,7 +20,7 @@ rainbowShuttle: target=rainbowShuttle
 $(list): one;
 
 one:
-	g++ $($(target)_SRC) $(common_SRC) -o $(build_DIR)/$(target)
+	g++ $(common_SRC) $($(target)_SRC) -std=c++14 -lpthread -o $(build_DIR)/$(target)
 
 clean:
 	rm ../build/*

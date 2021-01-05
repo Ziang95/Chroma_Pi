@@ -1,8 +1,8 @@
 # A Library of chroma effects for Raspberry Pi
-I know "RGB effect" has been such a cliché, but "chroma effect" may still have its chance (Razer somehow did a good job in it). 
+I know "RGB effect" has been such a cliché, but "chroma effect" may still have its chance (Razer somehow did a good job on it). 
 With this library, you can customize chroma effects like `Rainbow`, `Wave` or so on a Raspberry Pi, and use them to build your own vibe.
 
-But of course, with the help of a sweat tiny Pulse-width Modulation (PWM) board [PCA9685](http://github.com/Ziang95/Chroma_Pi/tree/main/data_sheets/PCA9685.pdf), 
+But of course, with the help of a sweet tiny Pulse-width Modulation (PWM) board [PCA9685](http://github.com/Ziang95/Chroma_Pi/tree/main/data_sheets/PCA9685.pdf), 
 which is very popular in controlling LEDs. A PCA9685 uses an I2C connection protocol, and can be powered by either 3.3V or 5~6V (external) source, with 
 Up to 16 PWM channels. Since an RGB LED is typically 4-pin, a single PCA9685 can support up to 5 LEDs at a time -- dont't worry, 
 it is way enough for a small range decoration, and after all, you can stack up PCA9685 boards to support extra LEDs.

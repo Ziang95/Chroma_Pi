@@ -8,6 +8,11 @@
 
 using namespace std;
 
+bool nonStop()
+{
+    return false;
+}
+
 int main()
 {
     PCA9685 hat(0x40, 1);
@@ -15,7 +20,14 @@ int main()
     hat.setFreq(1525);
     chromled led0(&hat, 0, 1, 2, COMMON_ANODE);
     chromled led1(&hat, 3, 4, 5, COMMON_ANODE);
-    
     vector<chromled*> leds{&led0, &led1};
-    rainbow(leds, STEPS);
+
+    //---------OOP Programming----------
+    chroma_layer layer(leds);
+    layer.load(rainbow, nonStop, STEPS);
+    //----------------------------------
+
+    //------Functional Programming------
+    // rainbow(leds, nonStop, STEPS);
+    //----------------------------------
 }

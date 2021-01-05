@@ -82,7 +82,7 @@ ostream& operator<< (ostream &os, RGB_12bit const& obj)
 }
 
 chromled::chromled(PCA9685 *chip, int R_c, int G_c, int B_c, bool eType)
-:chip(chip),color(0, 0, 0)
+:chip(chip)
 {
     this->R_channel = R_c;
     this->G_channel = G_c;
