@@ -96,6 +96,16 @@ void linear_gradient(vector<chromled*> leds, vector<RGB_12bit> targets, int step
     }
 }
 
+void filtration(vector<chromled*> leds, bool (*stopSign)(void), RGB_12bit target, int steps)
+{
+    for (uint i = 0; i < leds.size(); i++)
+    {   
+        leds[i]->linear_gradient(steps, target);
+        if (stopSign())
+            break;
+    }
+}
+
 void color_rally(vector<chromled*> leds, bool (*stopSign)(), vector<RGB_12bit> color_set, int steps)
 {
     vector<RGB_12bit> color_tmp(leds.size());
