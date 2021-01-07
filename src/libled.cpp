@@ -33,6 +33,16 @@ void RGB_12bit::random()
     (*this) = (*this) * 0xFFF / (R + G + B);
 }
 
+void RGB_12bit::calibrate(int brightness, int base)
+{
+    int sum = R + G + B;
+    int target_sum = 0xFFF * brightness / base;
+
+    R = R * target_sum / sum;
+    G = G * target_sum / sum;
+    B = B * target_sum / sum;
+}
+
 RGB_12bit RGB_12bit::operator+ (RGB_12bit const &obj)
 {
     RGB_12bit ret(R + obj.R, G + obj.G, B + obj.B);

@@ -46,6 +46,12 @@ void colorful_shuttle(vector<chromled*> leds, bool (*stopSign)(void), vector<RGB
 void rainbow(vector<chromled*> leds, bool (*stopSign)(void), int steps);
 void rainbow_shuttle(vector<chromled*> leds, bool (*stopSign)(void), int steps, int usleepT);
 
-#include "../src/chroma.tcc"
+
+template<typename Callable, typename... Args>
+void chroma_layer::load(Callable &&func, Args&&... args)
+{
+    wait_thread();
+    layer_thread = new thread(func, leds, args...);
+}
 
 #endif

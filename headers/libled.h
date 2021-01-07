@@ -23,6 +23,7 @@ public:
 
     void set(int r, int g, int b);
     void random();
+    void calibrate(int brightness, int base);
 
     int& operator[] (uint8_t i);
     RGB_12bit operator+ (RGB_12bit const &obj);
