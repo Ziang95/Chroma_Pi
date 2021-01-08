@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     hat.setFreq(1525);
     chromled led0(&hat, 0, 1, 2, COMMON_ANODE);
     chromled led1(&hat, 3, 4, 5, COMMON_ANODE);
-    vector<chromled*> leds{&led0, &led1};
+    vector<chromled> leds{led0, led1};
 
     //---------OOP Programming----------
     chroma_layer layer(leds);

@@ -42,10 +42,10 @@ public:
     void reset();
     void linear_gradient(int steps, RGB_12bit target);
 
-    RGB_12bit get_color();
+    RGB_12bit get_color() const;
 private:
     RGB_12bit color = RGB_12bit(0, 0, 0);
-    PCA9685 *const chip = nullptr;
+    PCA9685 *chip = nullptr;
     bool eType;
     int R_channel;
     int G_channel;

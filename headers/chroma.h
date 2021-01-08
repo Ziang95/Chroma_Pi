@@ -19,39 +19,39 @@ using namespace std;
 class chroma_layer
 {
 public:
-    chroma_layer(vector<chromled*> const &_leds);
+    chroma_layer(vector<chromled> &_leds);
     ~chroma_layer();
     template<typename Callable, typename... Args>
     void load(Callable &&func, Args&&... args);
-    void rearrange(vector<chromled*> const &_leds);
+    void rearrange(vector<chromled> &_leds);
 private:
     void wait_thread();
     thread *layer_thread;
-    vector<chromled*> leds;
+    vector<chromled> leds;
 };
 
-inline void set_colors(vector<chromled*> const &leds, vector<RGB_12bit> const &targets);
-inline void set_colors(vector<chromled*> const &leds, RGB_12bit const &target);
-void extinct(vector<chromled*> leds);
-void linear_gradient(vector<chromled*> leds, vector<RGB_12bit> targets, int steps);
-void dimm_color(chromled* _led, RGB_12bit color, int level);
-void blink_on(vector<chromled*> leds, int openT, int closeT);
-void blink_off(vector<chromled*> leds, int closeT, int openT);
+inline void set_colors(vector<chromled> &leds, vector<RGB_12bit> const &targets);
+inline void set_colors(vector<chromled> &leds, RGB_12bit const &target);
+void extinct(vector<chromled> &leds);
+void linear_gradient(vector<chromled> &leds, vector<RGB_12bit> targets, int steps);
+void dimm_color(chromled &led, RGB_12bit color, int level);
+void blink_on(vector<chromled> &leds, int openT, int closeT);
+void blink_off(vector<chromled> &leds, int closeT, int openT);
 
-void filtration(vector<chromled*> leds, bool (*stopSign)(void), RGB_12bit target, int steps);
-void color_rally(vector<chromled*> leds, bool (*stopSign)(void), vector<RGB_12bit> color_set, int steps);
-void shuttle(vector<chromled*> leds, bool (*stopSign)(void), RGB_12bit color, int steps, int usleepT);
-void colorful_shuttle(vector<chromled*> leds, bool (*stopSign)(void), vector<RGB_12bit> color, int steps, int usleepT);
+void filtration(vector<chromled> &leds, bool (*stopSign)(void), RGB_12bit target, int steps);
+void color_rally(vector<chromled> &leds, bool (*stopSign)(void), vector<RGB_12bit> color_set, int steps);
+void shuttle(vector<chromled> &leds, bool (*stopSign)(void), RGB_12bit color, int steps, int usleepT);
+void colorful_shuttle(vector<chromled> &leds, bool (*stopSign)(void), vector<RGB_12bit> color, int steps, int usleepT);
 
-void rainbow(vector<chromled*> leds, bool (*stopSign)(void), int steps);
-void rainbow_shuttle(vector<chromled*> leds, bool (*stopSign)(void), int steps, int usleepT);
+void rainbow(vector<chromled> &leds, bool (*stopSign)(void), int steps);
+void rainbow_shuttle(vector<chromled> &leds, bool (*stopSign)(void), int steps, int usleepT);
 
 
 template<typename Callable, typename... Args>
 void chroma_layer::load(Callable &&func, Args&&... args)
 {
     wait_thread();
-    layer_thread = new thread(func, leds, args...);
+    layer_thread = new thread(func, ref(leds), args...);
 }
 
 #endif

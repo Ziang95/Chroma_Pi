@@ -5,7 +5,7 @@
 
 using namespace std;
 
-chroma_layer::chroma_layer(vector<chromled*> const &_leds)
+chroma_layer::chroma_layer(vector<chromled> &_leds)
 {
     leds = _leds;
     layer_thread = nullptr;
@@ -16,7 +16,7 @@ chroma_layer::~chroma_layer()
     wait_thread();
 }
 
-void chroma_layer::rearrange(vector<chromled*> const &_leds)
+void chroma_layer::rearrange(vector<chromled> &_leds)
 {
     wait_thread();
     leds = _leds;
@@ -32,33 +32,33 @@ void chroma_layer::wait_thread()
     }
 }
 
-inline void set_colors(vector<chromled*> const &leds, vector<RGB_12bit> &targets)
+inline void set_colors(vector<chromled> &leds, vector<RGB_12bit> &targets)
 {
     for (uint i = 0; i < leds.size(); i++)
-        leds[i]->set_color(targets[i]);
+        leds[i].set_color(targets[i]);
 }
 
-inline void set_color(vector<chromled*> const &leds, RGB_12bit const &color)
+inline void set_color(vector<chromled> &leds, RGB_12bit const &color)
 {
     for (uint i = 0; i < leds.size(); i++)
-        leds[i]->set_color(color);
+        leds[i].set_color(color);
 }
 
-void extinct(vector<chromled*> leds)
+void extinct(vector<chromled> &leds)
 {
     set_color(leds, RGB_12bit(0, 0, 0));
 }
 
-void dimm_color(chromled* led, RGB_12bit color, int level)
+void dimm_color(chromled &led, RGB_12bit color, int level)
 {
     if (level > 100) level = 100;
     else if (level < 0) level = 0;
     color = color * level;
     color = color / 100;
-    led->set_color(color);
+    led.set_color(color);
 }
 
-void linear_gradient(vector<chromled*> leds, vector<RGB_12bit> targets, int steps)
+void linear_gradient(vector<chromled> &leds, vector<RGB_12bit> targets, int steps)
 {
     if (leds.size() != targets.size())
     {
@@ -68,7 +68,7 @@ void linear_gradient(vector<chromled*> leds, vector<RGB_12bit> targets, int step
     vector<RGB_12bit> colors_tmp, distances, strides;
     bool finished = false;
     for (auto const &led : leds)
-        colors_tmp.push_back(led->get_color());
+        colors_tmp.push_back(led.get_color());
     for (uint i = 0; i < targets.size(); i++)
     {
         distances.push_back(targets[i] - colors_tmp[i]);
@@ -91,22 +91,22 @@ void linear_gradient(vector<chromled*> leds, vector<RGB_12bit> targets, int step
                 else
                     colors_tmp[k][l] += strides[k][l];
             }
-            leds[k]->set_color(colors_tmp[k]);
+            leds[k].set_color(colors_tmp[k]);
         } 
     }
 }
 
-void filtration(vector<chromled*> leds, bool (*stopSign)(void), RGB_12bit target, int steps)
+void filtration(vector<chromled> &leds, bool (*stopSign)(void), RGB_12bit target, int steps)
 {
     for (uint i = 0; i < leds.size(); i++)
     {   
-        leds[i]->linear_gradient(steps, target);
+        leds[i].linear_gradient(steps, target);
         if (stopSign())
             break;
     }
 }
 
-void color_rally(vector<chromled*> leds, bool (*stopSign)(), vector<RGB_12bit> color_set, int steps)
+void color_rally(vector<chromled> &leds, bool (*stopSign)(), vector<RGB_12bit> color_set, int steps)
 {
     vector<RGB_12bit> color_tmp(leds.size());
     int c_size = color_set.size();
@@ -122,13 +122,13 @@ void color_rally(vector<chromled*> leds, bool (*stopSign)(), vector<RGB_12bit> c
     }
 }
 
-void rainbow(vector<chromled*> leds, bool (*stopSign)(), int steps)
+void rainbow(vector<chromled> &leds, bool (*stopSign)(), int steps)
 {
     vector<RGB_12bit> rainbow_set{RED, ORANGE, YELLOW, GREEN, BLUE, VIOLET};
     color_rally(leds, stopSign, rainbow_set, steps);
 }
 
-void shuttle(vector<chromled*> leds, bool (*stopSign)(void), RGB_12bit color, int steps, int usleepT)
+void shuttle(vector<chromled> &leds, bool (*stopSign)(void), RGB_12bit color, int steps, int usleepT)
 {
     int l_size = leds.size();
     if (l_size < 1) return;
@@ -151,7 +151,7 @@ void shuttle(vector<chromled*> leds, bool (*stopSign)(void), RGB_12bit color, in
     }
 }
 
-void colorful_shuttle(vector<chromled*> leds, bool (*stopSign)(void), vector<RGB_12bit> color_set, int steps, int usleepT)
+void colorful_shuttle(vector<chromled> &leds, bool (*stopSign)(void), vector<RGB_12bit> color_set, int steps, int usleepT)
 {
     int l_size = leds.size();
     if (l_size < 1) return;
@@ -177,13 +177,13 @@ void colorful_shuttle(vector<chromled*> leds, bool (*stopSign)(void), vector<RGB
     }
 }
 
-void rainbow_shuttle(vector<chromled*> leds, bool (*stopSign)(void), int steps, int usleepT)
+void rainbow_shuttle(vector<chromled> &leds, bool (*stopSign)(void), int steps, int usleepT)
 {
     vector<RGB_12bit> rainbow_set{RED, ORANGE, YELLOW, GREEN, BLUE, VIOLET};
     colorful_shuttle(leds, stopSign, rainbow_set, steps, usleepT);
 }
 
-void blink_on(vector<chromled*> leds, int onT, int offT)
+void blink_on(vector<chromled> &leds, int onT, int offT)
 {
     RGB_12bit color;
     srand(time(NULL));
@@ -208,11 +208,11 @@ void blink_on(vector<chromled*> leds, int onT, int offT)
     set_color(leds, color);
 }
 
-void blink_off(vector<chromled*> leds, int offT, int onT)
+void blink_off(vector<chromled> &leds, int offT, int onT)
 {
     vector<RGB_12bit> colors;
     for (uint i = 0; i < leds.size(); i++)
-        colors.push_back(leds[i]->get_color());
+        colors.push_back(leds[i].get_color());
     srand(time(NULL));
     int blinkTime = rand() % 5;
 

@@ -126,7 +126,7 @@ void chromled::reset()
     set_color(dark);
 }
 
-RGB_12bit chromled::get_color()
+RGB_12bit chromled::get_color() const
 {
     return this->color;
 }
