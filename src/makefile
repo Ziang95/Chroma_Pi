@@ -1,6 +1,3 @@
-SRC_FILES=$(wildcard *.cpp)
-OBJ_FILES=$(addprefix $(BUILD_DIR), $(SRC_FILES:cpp=o))
-
-$(OBJ_FILES): $(SRC_FILES)
-	$(CC) -c $?
+$(OBJ_FILES): $(SRC_FILES) $(HDR_FILES)
+	$(CC) -c $(SRC_FILES)
 	mv *.o ../build/

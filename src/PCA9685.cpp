@@ -80,3 +80,14 @@ void PCA9685::setPWM(int channel, int on, int off) {
     this->setRegister((uint8_t) (0x06 + (channel * 4) + 2), lowOFF);
     this->setRegister((uint8_t) (0x06 + (channel * 4) + 3), highOFF);
 }
+
+void PCA9685::getPWM(int channel, int* on, int* off) {
+    if (channel > 15) {
+        throw std::domain_error("Channel ID out of range");
+    }
+    
+    *on  = this->getRegister((uint8_t) (0x06 + (channel * 4)));
+    *on |= this->getRegister((uint8_t) (0x06 + (channel * 4) + 1)) << 8;
+    *off  = this->getRegister((uint8_t) (0x06 + (channel * 4) + 2));
+    *off |= this->getRegister((uint8_t) (0x06 + (channel * 4) + 3)) << 8;
+}

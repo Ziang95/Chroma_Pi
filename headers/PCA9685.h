@@ -14,6 +14,7 @@ public:
 
     void init();
     void setPWM(int channel, int on, int off);
+    void getPWM(int channel, int *on, int *off);
     void setFreq(int freq);
 
 private:
